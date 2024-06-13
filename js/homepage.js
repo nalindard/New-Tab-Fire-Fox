@@ -1,9 +1,11 @@
 let bgContent = []
-// let bgIndex = 0
 // const browser = chrome
 let intervalId;
 
-(async function update() {
+// ///////////////////////////////////////////////////////////////////
+// Main - Entry point,
+// ///////////////////////////////////////////////////////////////////
+(async function main() {
     const preference = await getPreferenceWallpaper()
     await updateElementContext(preference)
 
@@ -17,20 +19,17 @@ let intervalId;
         let bgIndex = await getBgIndex()
         updateBackground(bgContent[bgIndex], 'bing-wallpaper')
     }
-    // getTime()
     setClock()
-
-    // intervalId = setInterval(() => {
-    //     getTime()
-    // }, 1000);
     setTimeout(() => {
         setGreet()
     }, 0);
-
-    // console.log(await getPreferenceWallpaper())
     updateTopsite()
 })()
-// update()
+
+
+// ///////////////////////////////////////////////////////////////////
+// Window Events,
+// ///////////////////////////////////////////////////////////////////
 
 // Laving to the window,
 window.addEventListener('blur', () => {
@@ -44,6 +43,52 @@ window.addEventListener('focus', () => {
         setGreet()
     }, 0);
 })
+
+// ///////////////////////////////////////////////////////////////////
+// Document Events,
+// ///////////////////////////////////////////////////////////////////
+document.getElementById('pre-img').onclick = async () => {
+    if (await getPreferenceWallpaper() !== 'bing-wallpaper') {
+        // console.log('Malicious input, reject');
+        return
+    }
+    let bgIndex = await getBgIndex()
+    if (await bgIndex <= 0) {
+        bgIndex = (bgContent.length - 1)
+    } else {
+        bgIndex -= 1
+    }
+    await setBgIndex(bgIndex)
+    updateBackground(bgContent[bgIndex], 'bing-wallpaper')
+}
+
+document.getElementById('nxt-img').onclick = async () => {
+    if (await getPreferenceWallpaper() !== 'bing-wallpaper') {
+        // console.log('Malicious input, reject');
+        return
+    }
+    let bgIndex = await getBgIndex()
+    if (await bgIndex >= (bgContent.length - 1)) {
+        bgIndex = 0
+    } else {
+        bgIndex += 1
+    }
+    await setBgIndex(bgIndex)
+    updateBackground(bgContent[bgIndex], 'bing-wallpaper')
+}
+
+document.getElementById('search').onchange = async (e) => {
+    // await chrome.search?.query({ text: e.target.value, disposition: "NEW_TAB" }, (d) => { console.log(d); })
+    await chrome.search?.query({ text: e.target.value }, (d) => { console.log(d); })
+}
+
+
+document.getElementById('bm-btn').onclick = async () => {
+    chrome.bookmarks?.getTree((d) => console.log(d))
+}
+// ///////////////////////////////////////////////////////////////////
+// Functions,
+// ///////////////////////////////////////////////////////////////////
 
 function setGreet() {
     const greets = {
@@ -145,7 +190,6 @@ async function fetchBingImages() {
     try {
         let res = await fetch('https://peapix.com/bing/feed?country=us', { cache: 'force-cache', })
         let data = await res.json()
-        // console.log(data);
         return data
     } catch (error) {
         return [
@@ -259,9 +303,7 @@ async function getBgIndex() {
     const result = await browser.storage.local.get('bg_index')
     console.log('Bg index getting:', await result['bg_index']);
     if (!result['bg_index'] && (typeof await result['bg_index'] !== 'number')) {
-        // if (typeof result['bg_index'] !== 'number') {
         await setBgIndex(0)
-        // }
         return 0
     } else {
         return await result['bg_index']
@@ -283,7 +325,6 @@ function updateBackground(data, preference) {
     };
 
     if (preference && preference === 'bing-wallpaper') {
-        // document.body.style.background = `url('${data?.fullUrl}')`
         let title = data?.title
 
         if (typeof title === 'string' && title.length > 25) title = title.slice(0, 25) + '...'
@@ -320,61 +361,7 @@ async function updateElementContext(src) {
     }
 }
 
-// chrome.storage.local.set({ key: value }).then(() => {
-//     console.log("Value is set");
-//   });
-
-//   chrome.storage.local.get(["key"]).then((result) => {
-//     console.log("Value currently is " + result.key);
-//   });
-
-// -----------------------------------------------------------
-document.getElementById('pre-img').onclick = async () => {
-    if (await getPreferenceWallpaper() !== 'bing-wallpaper') {
-        // console.log('Malicious input, reject');
-        return
-    }
-    let bgIndex = await getBgIndex()
-    if (await bgIndex <= 0) {
-        bgIndex = (bgContent.length - 1)
-    } else {
-        bgIndex -= 1
-    }
-    await setBgIndex(bgIndex)
-    updateBackground(bgContent[bgIndex], 'bing-wallpaper')
-}
-
-document.getElementById('nxt-img').onclick = async () => {
-    if (await getPreferenceWallpaper() !== 'bing-wallpaper') {
-        // console.log('Malicious input, reject');
-        return
-    }
-    let bgIndex = await getBgIndex()
-    if (await bgIndex >= (bgContent.length - 1)) {
-        bgIndex = 0
-    } else {
-        bgIndex += 1
-    }
-    await setBgIndex(bgIndex)
-    updateBackground(bgContent[bgIndex], 'bing-wallpaper')
-}
-
-document.getElementById('search').onchange = async (e) => {
-    // console.log(e.target.value);
-    // await chrome.search?.query({ text: e.target.value, disposition: "NEW_TAB" }, (d) => { console.log(d); })
-    await chrome.search?.query({ text: e.target.value }, (d) => { console.log(d); })
-}
-
-
-document.getElementById('bm-btn').onclick = async () => {
-    chrome.bookmarks?.getTree((d) => console.log(d))
-}
-
-
-// document.getElementById('topsites-btn').onclick = updateTopsite
-
 async function updateTopsite() {
-    // document.getElementById('topsites-btn').onclick = async () => {
     const sites = await browser.topSites.get()
     const list = sites.map(site => {
         const url = new URL(site.url)
@@ -382,7 +369,6 @@ async function updateTopsite() {
         // let favicon = new URL("/favicon.ico", site.url).href
         // let favicon = `https://www.google.com/s2/favicons?sz=64&domain_url=${url.host}`
         let favicon = `https://favicone.com/${url.host}?s=100`
-        // https://favicone.com/nalindard.github.io?s=100
 
         return {
             url: url.href,
@@ -392,8 +378,6 @@ async function updateTopsite() {
         }
 
     })
-    // console.log(list);
-    // document.getElementById('topsites-list').innerText = list
 
     let filterd_list = list.filter(tile => !(tile.url.includes('localhost') || tile.url.includes('127.0.0.1')))
 
@@ -404,7 +388,6 @@ async function updateTopsite() {
     }
 
     filterd_list.forEach(tile => {
-        // console.log(tile);
         document.getElementById('topsites-list').innerHTML += `
             <a href="${tile.url}" rel="noopener noreferrer">
                 <span class="tile">
@@ -445,6 +428,8 @@ function updateTheme() {
 }
 
 // ///////////////////////////////////////////////////////////////////
+// Wallpaer Management,
+// ///////////////////////////////////////////////////////////////////
 
 // Input Wallpaper,
 document.getElementById('userImage').onchange = (e) => {
@@ -464,23 +449,8 @@ document.getElementById('userImage').onchange = (e) => {
             console.log('reader loads');
             const arrayBuffer = e.target.result;
             const blob = new Blob([arrayBuffer], { type: file.type });
-
-            // Create a unique key for the image
-            // const imageKey = 'userImage_' + new Date.now()
-
-            // Convert Blob to ArrayBuffer for storage
-            // blob.arrayBuffer().then(buffer => {
-            //     const imageData = new Uint8Array(buffer);
-            //     // chrome.storage.local.set({ [imageKey]: imageData }, () => {
-            //     //     console.log('Image saved in storage as Blob');
-            //     // });
-            //     console.log(imageData);
-            // });
             const buffer = await blob.arrayBuffer()
             const imageData = new Uint8Array(buffer);
-            // await browser.storage.local.set({ ['userImage']: imageData }, () => {
-            //     console.log('Image saved in storage as Blob');
-            // });
             await browser.storage.local.set({ ['userImage']: imageData });
             console.log(imageData);
         };
@@ -488,99 +458,6 @@ document.getElementById('userImage').onchange = (e) => {
 
     updateTheme()
 }
-
-// Get Wallpaper,
-async function getSavedWallpaper() {
-    const result = await browser.storage.local.get('userImage')
-    // if (result['userImage']) {
-    console.log('loading saved image');
-    const data = new Uint8Array(result['userImage'])
-    const blob = new Blob([data])
-    const srcUrl = URL.createObjectURL(blob)
-    console.log('saved url', srcUrl);
-    return srcUrl
-    // }
-}
-
-// Check Saved Wallpaper,
-async function checkSavedWallpaper() {
-    const result = await browser.storage.local.get('userImage')
-    if (await result['userImage']) {
-        return true
-    } else {
-        return false
-    }
-}
-
-// Update wallpaper preferences,
-async function updatePreferenceWallpaper(src) {
-    // await browser.storage.local.set({ ['wallpaper-src']: src }, () => {
-    //     console.log('wallpaper src set to:', src);
-    // });
-    await browser.storage.local.set({ ['wallpaper-src']: src });
-}
-// Get wallpaper preferences,
-async function getPreferenceWallpaper() {
-    const result = await browser.storage.local.get('wallpaper-src')
-    console.log('Wallpaper src getting:', await result['wallpaper-src']);
-    if (!result['wallpaper-src']) return 'bing-wallpaper'
-    return await result['wallpaper-src']
-}
-
-
-// document.getElementById('inputImage').addEventListener('click', (e) => {
-//     const input = document.getElementById('userImage');
-//     if (input.files && input.files[0]) {
-//         const file = input.files[0];
-
-//         console.log(file);
-
-//         const src = URL.createObjectURL(file)
-//         document.body.style.background = `url('${src}')`
-
-
-//         const reader = new FileReader();
-
-//         reader.onload = function (e) {
-//             const arrayBuffer = e.target.result;
-//             const blob = new Blob([arrayBuffer], { type: file.type });
-
-//             // Create a unique key for the image
-//             const imageKey = 'userImage_' + Date.now();
-
-//             // Convert Blob to ArrayBuffer for storage
-//             blob.arrayBuffer().then(buffer => {
-//                 const imageData = new Uint8Array(buffer);
-//                 // chrome.storage.local.set({ [imageKey]: imageData }, () => {
-//                 //     console.log('Image saved in storage as Blob');
-//                 // });
-//                 console.log(image, imageData);
-//             });
-//         };
-
-//         reader.readAsArrayBuffer(file); // Read the file as an ArrayBuffer
-//     }
-// });
-
-// Function to retrieve and display the stored image
-// function loadImage(imageKey) {
-//     chrome.storage.local.get(imageKey, (result) => {
-//         if (result[imageKey]) {
-//             const imageData = new Uint8Array(result[imageKey]);
-//             const blob = new Blob([imageData]);
-
-//             const img = document.createElement('img');
-//             img.src = URL.createObjectURL(blob);
-//             document.body.appendChild(img);
-//         } else {
-//             console.log('No image found for key:', imageKey);
-//         }
-//     });
-// }
-
-// Example usage:
-// const imageKey = 'userImage_1234567890'; // Replace with the actual key used during saving
-// loadImage(imageKey);
 
 // Wallpaper src change,
 document.getElementById('inputImage').onclick = async (e) => {
@@ -599,11 +476,44 @@ document.getElementById('inputImage').onclick = async (e) => {
     }
 }
 
-// ///////////////////////////////////////////////////////////////////
+// Get Wallpaper,
+async function getSavedWallpaper() {
+    const result = await browser.storage.local.get('userImage')
+    console.log('loading saved image');
+    const data = new Uint8Array(result['userImage'])
+    const blob = new Blob([data])
+    const srcUrl = URL.createObjectURL(blob)
+    console.log('saved url', srcUrl);
+    return srcUrl
+}
+
+// Check Saved Wallpaper,
+async function checkSavedWallpaper() {
+    const result = await browser.storage.local.get('userImage')
+    if (await result['userImage']) {
+        return true
+    } else {
+        return false
+    }
+}
+
+// Update wallpaper preferences,
+async function updatePreferenceWallpaper(src) {
+    await browser.storage.local.set({ ['wallpaper-src']: src });
+}
+// Get wallpaper preferences,
+async function getPreferenceWallpaper() {
+    const result = await browser.storage.local.get('wallpaper-src')
+    console.log('Wallpaper src getting:', await result['wallpaper-src']);
+    if (!result['wallpaper-src']) return 'bing-wallpaper'
+    return await result['wallpaper-src']
+}
 
 // ///////////////////////////////////////////////////////////////////
+// Task Management,
+// ///////////////////////////////////////////////////////////////////
+
 document.getElementById('sidebar-btn').onclick = async (e) => {
-    // console.log('Sidebar btn click', e);
     document.getElementById('sidebar').classList.toggle('show-sidebar')
     document.getElementById('sidebar').classList.toggle('hide-sidebar')
     document.getElementById('sidebar-btn').classList.toggle('sidebar-btn-default')
@@ -611,7 +521,6 @@ document.getElementById('sidebar-btn').onclick = async (e) => {
     await renderTask()
 }
 
-// ///////////////////////////////////////////////////////////////////
 document.getElementById('save-task-btn').onclick = async () => {
     let text = document.getElementById('task-text').value
     if (typeof text === 'string' && text.length > 0) addTask(text)
@@ -631,9 +540,7 @@ async function addTask(text) {
         throw "Too many items"
     }
 
-    // if (await checkStorage('task-list')) {
     if (await currentTaskList.length > 0) {
-        // const currentTaskList = await getStorage('task-list')
         console.log(currentTaskList, text);
         await setStorage('task-list', [{ id: currentTaskList.length + 1, task: text }, ...currentTaskList])
         await renderTask()
@@ -678,6 +585,8 @@ async function renderTask() {
 }
 
 // ///////////////////////////////////////////////////////////////////
+// Utils
+// ///////////////////////////////////////////////////////////////////
 
 async function checkStorage(key = "") {
     if (typeof key !== 'string' || key.length < 1) {
@@ -696,7 +605,6 @@ async function getStorage(key = "") {
         throw "Storage key is empty or Invalid key type"
     } else {
         const data = await browser.storage.local.get(key)
-        // console.log(`${key} getting 🔥:`, data, data[key]);
         return data[key]
     }
 }
@@ -705,29 +613,5 @@ async function setStorage(key = "", value) {
         throw "Storage key is empty or Invalid key type"
     } else {
         await browser.storage.local.set({ [key]: value })
-        // console.log(`${key} saved:`, value);
-        // await browser.storage.local.set({ ['wallpaper-src']: src }, () => {
-        //     console.log('wallpaper src set to:', src);
-        // });
     }
 }
-
-
-
-// ///////////////////////////////////////////////////////////////////
-
-
-// Send a massage to backend,
-// document.getElementById('to-back-end').onclick = () => {
-//     browser.runtime.sendMessage({ from: 'home_page', greeting: "hello from homepage" }, (response) => {
-//         document.getElementById('results-from-back-end').innerText = response.reply
-//     });
-// }
-
-// Listen for messages from the background script
-// browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-//     if (message.to === "home_page") {
-//         console.log("Message received from background:", message.greeting);
-//         sendResponse({ reply: "hello from homepage" });
-//     }
-// });
