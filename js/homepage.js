@@ -39,6 +39,7 @@ window.addEventListener('blur', () => {
 // Coming to the window,
 window.addEventListener('focus', () => {
     setClock()
+    updateTheme()
     setTimeout(() => {
         setGreet()
     }, 0);
@@ -439,8 +440,7 @@ function detectColorScheme() {
 
 function updateTheme() {
     browser.runtime.sendMessage({ from: 'home_page', duty: "updateTheme", color_scheme: detectColorScheme() }, async (response) => {
-        // document.getElementById('results-from-back-end').innerText = response?.reply
-        // console.log('Update theme response:', response?.reply);
+        console.log('Update theme response:', response);
     });
 }
 
