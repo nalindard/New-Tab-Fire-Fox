@@ -1,0 +1,68 @@
+{
+    "manifest_version": 3,
+    "name": "Home Page",
+    "short_name": "Home Page",
+    "author": "Nalinda Dissanayake",
+    "developer": {
+        "name": "Nalinda Dissanayake",
+        "url": "https://nalindard.github.io/"
+    },
+    "description": "Make It Yours. Enjoy the Life. Freedom with Firefox - 🔥🦊. Dynamically updating themes, task list, sweet greetings, set your own wallpaper or use bing wallpaer and even download them at ease. Easy on cpu. No ads, no user tracking full freedom. Give yourself some awesome time !",
+    "version": "0.0.1",
+    "version_name": "0.0.1 beta",
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "homepage@nalindard.github.io",
+            "strict_min_version": "42.0"
+        }
+    },
+    "icons": {
+        "16": "icons/icon-16.png",
+        "32": "icons/icon-32.png",
+        "48": "icons/icon-48.png",
+        "128": "icons/icon-128.png"
+    },
+    "permissions": [
+        "storage",
+        "search",
+        "bookmarks",
+        "theme",
+        "topSites",
+        "tabs",
+        "activeTab",
+        "scripting"
+    ],
+    "host_permissions": [
+        "*://*/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*/*",
+                "<all_urls>"
+            ],
+            "js": [
+                "js/contentScript.js"
+            ]
+        }
+    ],
+    "chrome_url_overrides": {
+        "newtab": "homepage.html"
+    },
+    "action": {
+        "default_title": "Home Page",
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "icons/icon-16.png",
+            "48": "icons/icon-48.png",
+            "128": "icons/icon-128.png"
+        }
+    },
+    "background": {
+        "scripts": [
+            "./js/service_worker.js"
+        ],
+        "service_worker": "./js/service_worker.js",
+        "type": "module"
+    }
+}

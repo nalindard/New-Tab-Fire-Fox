@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#view {
+    min-width: 720px;
+    padding: 1rem 1.7rem;
+    background-color: #252525;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+h1 {
+    font-size: 18px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px;
+}
+
+#color-display {
+    margin-top: 10px;
+    height: 100px;
+    width: 250px;
+    border: 1px solid #000;
+}

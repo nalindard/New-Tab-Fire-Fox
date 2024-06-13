@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="homepage.css">
+    <script defer src="./js/homepage.js"></script>
+    <title>New Tab</title>
+</head>
+
+<body class="center">
+    <div id="greetings" class="center">
+        <h4 id="greetings-msg"></h4>
+        <!-- <div id="res"></div> -->
+    </div>
+
+    <div id="time">
+        <p id="time-time">00:00:00
+    </div>
+    <p id="time-day">Monday 17, September</div>
+        </div>
+
+    <div id="search-bar">
+        <!-- <form> -->
+        <input type="text" name="search" id="search" placeholder="Search for awesome things...!">
+        <button class="sub center" type="submit"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                height="24">
+                <path
+                    d="M18.031 16.6168L22.3137 20.8995L20.8995 22.3137L16.6168 18.031C15.0769 19.263 13.124 20 11 20C6.032 20 2 15.968 2 11C2 6.032 6.032 2 11 2C15.968 2 20 6.032 20 11C20 13.124 19.263 15.0769 18.031 16.6168ZM16.0247 15.8748C17.2475 14.6146 18 12.8956 18 11C18 7.1325 14.8675 4 11 4C7.1325 4 4 7.1325 4 11C4 14.8675 7.1325 18 11 18C12.8956 18 14.6146 17.2475 15.8748 16.0247L16.0247 15.8748Z"
+                    fill="currentColor"></path>
+            </svg></button>
+        <!-- </form> -->
+    </div>
+
+    <!-- <div id="bg-controll">
+        <button id="pre-img">Previous</button>
+        <button id="nxt-img">Next</button>
+    </div> -->
+    <div id="bg-data">
+        <h2 class="title"></h2>
+        <h4 class="copyright"></h4>
+        <h5 class="date"></h5>
+        <a href="#" class="download" target="_blank" download="">Download</a>
+        <a href="#" class="download-4k" target="_blank" download="">Download 4K</a>
+    </div>
+
+    <div id="bookmarks-side" style="display: none;">
+        Bookmarks
+        <div id="bmrk"></div>
+        <button id="bm-btn">clicik</button>
+    </div>
+    <div style="display: none;">
+        Theme
+        <button id="theme">Click</button>
+    </div>
+    <div id="topsites">
+        <div id="topsites-list"></div>
+        <!-- <button id="topsites-btn">Click</button> -->
+    </div>
+
+    <!-- <button id="to-back-end">Send to backend</button>
+    <div id="results-from-back-end"></div> -->
+
+    <!-- <div id="inputImage">
+        <label for="userImage">Your Own Image:</label>
+        <input type="file" name="userImage" id="userImage" accept="image/png, image/jpeg, image/jpg">
+    </div> -->
+
+    <!-- <div id="shades">
+        <div style="--c: #fbfbfe;" class="line"></div>
+        <div style="--c: #d7d7ef;" class="line"></div>
+        <div style="--c: #b2b2e1;" class="line"></div>
+        <div style="--c: #8d8dd3;" class="line"></div>
+        <div style="--c: #6969c4;" class="line"></div>
+        <div style="--c: #38388f;" class="line"></div>
+        <div style="--c: #29296b;" class="line"></div>
+        <div style="--c: #1b1b46;" class="line"></div>
+        <div style="--c: #0d0d21;" class="line"></div>
+        <div style="--c: #000000;" class="line"></div>
+    </div> -->
+
+    <!-- <div id="sidebar" class="hide-sidebar blur-bg"> -->
+    <div id="sidebar" class="hide-sidebar blur-bg">
+        <!-- Toggle button -->
+        <span id="sidebar-btn" class="center sidebar-btn-default blur-bg">
+            <svg class="sidebar-btn-icon" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
+                viewBox="0 0 24 24">
+                <path fill="currentColor"
+                    d="M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12S6.48 2 12 2m0 18c4.42 0 8-3.58 8-8s-3.58-8-8-8s-8 3.58-8 8s3.58 8 8 8m0-9h4v2h-4v3l-4-4l4-4z" />
+            </svg>
+        </span>
+
+        <!-- Content -->
+        <!-- Top section -->
+        <div id="sidebar-content">
+            <div style="min-height: 5%; overflow: hidden; margin-bottom: 7px; font-size: 100%;">
+                <h1>Make It Yours - 🎨!</h1>
+            </div>
+            <!-- Wallpaper -->
+            <div id="inputImage" style="height: 20%; overflow: hidden;">
+
+                <div>
+                    <label class="radio-lable">Your:<input type="radio" name="imageSrc" value="user"
+                            id="user-wallpaper"></label>
+                    <label class="radio-lable">Bing:<input type="radio" name="imageSrc" value="bing"
+                            id="bing-wallpaper"></label>
+                </div>
+                <div id="wallpaper-inputs">
+                    <!-- User Input Wallpaper -->
+                    <span id="userImage-container">
+                        <!-- <label for="userImage">Your Own Image:</label> -->
+                        <input type="file" name="userImage" id="userImage" accept="image/png, image/jpeg, image/jpg">
+                        <p style="color: yellow; padding-top: 0.5rem;">⚠️ - Large Images May Impact performance</p>
+                    </span>
+                    <!-- Bing Wallpaper controller -->
+                    <div id="bg-controll">
+                        <button id="pre-img">Previous</button>
+                        <button id="nxt-img">Next</button>
+                    </div>
+                </div>
+            </div>
+
+            <!--What To Next -->
+            <div id="task-section" style="height: 60%; overflow: hidden;">
+                <h2>Whats Next ?</h2>
+
+                <div id="task-input-section">
+                    <input type="text" id="task-text">
+                    <button id="save-task-btn">+</button>
+                </div>
+
+                <div id="task-list">
+                </div>
+
+            </div>
+
+            <!-- End section -->
+            <div id="sidebar-end-section" style="height: 10%; overflow: hidden;">
+                <!-- <div id="bg-controll">
+                    <button id="pre-img">Previous</button>
+                    <button id="nxt-img">Next</button>
+                </div> -->
+                <div id="my-links">
+                    <a href="https://nalindard.github.io/contacts">Tell Us How You Like It</a>
+                </div>
+                <div id="thanks-srcs">
+                    <a href="https://favicone.com">Favicons provided by Favicone</a>
+                    <a href="https://favicone.com">Bing images provided by Peapix</a>
+                </div>
+                <div id="terms">
+                    <p>We don't collect any details about you. All those permissions to make it work.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
