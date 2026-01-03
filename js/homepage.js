@@ -340,21 +340,23 @@ function updateBackground(data, preference) {
 }
 
 async function updateElementContext(src) {
+    const userContainer = document.getElementById("userImage-container")
+    const bingControls = document.getElementById("bg-controll")
+    const bgData = document.getElementById("bg-data")
+
     if (src === 'user-wallpaper') {
-        document.getElementById("bg-controll").style.visibility = 'hidden' // Pre, next buttons -> container
-        document.getElementById("bg-controll").style.position = 'absolute' // Pre, next buttons -> container
-        document.getElementById("bg-data").style.visibility = 'hidden' // Copyright data,
-        document.getElementById("userImage-container").style.visibility = 'visible' // Wallpaper input container,
-        document.getElementById("userImage-container").style.position = 'static' // Wallpaper input container,
-        document.getElementById("pre-img").disabled = true // Pre, next buttons, -> pre
-        document.getElementById("nxt-img").disabled = true // Pre, next buttons, -> next
-        document.getElementById("user-wallpaper").checked = true // radio
+        // Hide Bing controls, show user image input
+        bingControls.classList.remove('active')
+        userContainer.classList.add('active')
+        bgData.style.visibility = 'hidden'
+        document.getElementById("pre-img").disabled = true
+        document.getElementById("nxt-img").disabled = true
+        document.getElementById("user-wallpaper").checked = true
     } else if (src === 'bing-wallpaper') {
-        document.getElementById("bg-controll").style.visibility = 'visible'
-        document.getElementById("bg-controll").style.position = 'static'
-        document.getElementById("bg-data").style.visibility = 'visible'
-        document.getElementById("userImage-container").style.visibility = 'hidden'
-        document.getElementById("userImage-container").style.position = 'absolute'
+        // Show Bing controls, hide user image input
+        bingControls.classList.add('active')
+        userContainer.classList.remove('active')
+        bgData.style.visibility = 'visible'
         document.getElementById("pre-img").disabled = false
         document.getElementById("nxt-img").disabled = false
         document.getElementById("bing-wallpaper").checked = true
@@ -460,18 +462,21 @@ document.getElementById('userImage').onchange = (e) => {
 }
 
 // Wallpaper src change,
-document.getElementById('inputImage').onclick = async (e) => {
-    if (e.target?.id === 'user-wallpaper') {
+document.getElementById('wallpaper-options').onclick = async (e) => {
+    const target = e.target;
+    if (target?.id === 'user-wallpaper' || target?.closest('.radio-option')?.querySelector('#user-wallpaper')) {
         await updateElementContext('user-wallpaper')
-        const src = await getSavedWallpaper()
-        updateBackground({ fullUrl: src }, "user-wallpaper")
+        if (await checkSavedWallpaper()) {
+            const src = await getSavedWallpaper()
+            updateBackground({ fullUrl: src }, "user-wallpaper")
+        }
         updatePreferenceWallpaper('user-wallpaper')
-    } else if (e.target?.id === 'bing-wallpaper') {
+    } else if (target?.id === 'bing-wallpaper' || target?.closest('.radio-option')?.querySelector('#bing-wallpaper')) {
         await updateElementContext('bing-wallpaper')
         let data = await fetchBingImages()
         let bgIndex = await getBgIndex()
         bgContent = [...data]
-        updateBackground(bgContent[bgIndex], "user-wallpaper")
+        updateBackground(bgContent[bgIndex], 'bing-wallpaper')
         updatePreferenceWallpaper('bing-wallpaper')
     }
 }
@@ -510,20 +515,75 @@ async function getPreferenceWallpaper() {
 }
 
 // ///////////////////////////////////////////////////////////////////
+// Sidebar Management,
+// ///////////////////////////////////////////////////////////////////
+
+// Helper to close all sidebars
+function closeAllSidebars() {
+    document.getElementById('settings-sidebar').classList.remove('show-sidebar')
+    document.getElementById('settings-sidebar').classList.add('hide-sidebar')
+    document.getElementById('tasks-sidebar').classList.remove('show-sidebar')
+    document.getElementById('tasks-sidebar').classList.add('hide-sidebar')
+    document.getElementById('settings-toggle-btn').classList.remove('active')
+    document.getElementById('tasks-toggle-btn').classList.remove('active')
+}
+
+// Settings sidebar toggle
+document.getElementById('settings-toggle-btn').onclick = () => {
+    const sidebar = document.getElementById('settings-sidebar')
+    const isOpen = sidebar.classList.contains('show-sidebar')
+    closeAllSidebars()
+    if (!isOpen) {
+        sidebar.classList.remove('hide-sidebar')
+        sidebar.classList.add('show-sidebar')
+        document.getElementById('settings-toggle-btn').classList.add('active')
+    }
+}
+
+// Settings close button
+document.getElementById('settings-close-btn').onclick = () => {
+    closeAllSidebars()
+}
+
+// Tasks sidebar toggle
+document.getElementById('tasks-toggle-btn').onclick = async () => {
+    const sidebar = document.getElementById('tasks-sidebar')
+    const isOpen = sidebar.classList.contains('show-sidebar')
+    closeAllSidebars()
+    if (!isOpen) {
+        sidebar.classList.remove('hide-sidebar')
+        sidebar.classList.add('show-sidebar')
+        document.getElementById('tasks-toggle-btn').classList.add('active')
+        await renderTask()
+    }
+}
+
+// Tasks close button
+document.getElementById('tasks-close-btn').onclick = () => {
+    closeAllSidebars()
+}
+
+// ///////////////////////////////////////////////////////////////////
 // Task Management,
 // ///////////////////////////////////////////////////////////////////
 
-document.getElementById('sidebar-btn').onclick = async (e) => {
-    document.getElementById('sidebar').classList.toggle('show-sidebar')
-    document.getElementById('sidebar').classList.toggle('hide-sidebar')
-    document.getElementById('sidebar-btn').classList.toggle('sidebar-btn-default')
-    document.getElementById('sidebar-btn').classList.toggle('sidebar-btn-rotate')
-    await renderTask()
+document.getElementById('save-task-btn').onclick = async () => {
+    let text = document.getElementById('task-text').value.trim()
+    if (text.length > 0) {
+        await addTask(text)
+        document.getElementById('task-text').value = ''
+    }
 }
 
-document.getElementById('save-task-btn').onclick = async () => {
-    let text = document.getElementById('task-text').value
-    if (typeof text === 'string' && text.length > 0) addTask(text)
+// Allow Enter key to add task
+document.getElementById('task-text').onkeydown = async (e) => {
+    if (e.key === 'Enter') {
+        let text = e.target.value.trim()
+        if (text.length > 0) {
+            await addTask(text)
+            e.target.value = ''
+        }
+    }
 }
 
 document.getElementById('task-list').onclick = async (e) => {
@@ -573,14 +633,20 @@ async function getTasks() {
 }
 async function renderTask() {
     const currentTaskList = await getTasks()
-    document.getElementById('task-list').innerHTML = ''
-    if (await currentTaskList.length > 0) {
+    const taskListEl = document.getElementById('task-list')
+    const emptyStateEl = document.getElementById('tasks-empty')
+
+    taskListEl.innerHTML = ''
+
+    if (currentTaskList.length > 0) {
+        emptyStateEl.classList.remove('show')
         currentTaskList.forEach(task => {
-            if (task.id !== null || task.id !== undefined) {
-                document.getElementById('task-list').innerHTML += `<span data-id='${task.id}' class='task-item'>${task.task}</span>`
+            if (task.id !== null && task.id !== undefined) {
+                taskListEl.innerHTML += `<span data-id='${task.id}' class='task-item'>${task.task}</span>`
             }
         })
-
+    } else {
+        emptyStateEl.classList.add('show')
     }
 }
 
