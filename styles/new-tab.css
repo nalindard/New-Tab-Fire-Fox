@@ -102,6 +102,21 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* Background Overlay for Effects */
+#bg-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: -1;
+    backdrop-filter: blur(var(--bg-blur, 0px));
+    -webkit-backdrop-filter: blur(var(--bg-blur, 0px));
+    background: rgba(0, 0, 0, var(--bg-darkness, 0));
+    transition: backdrop-filter var(--transition-base), background var(--transition-base);
+}
+
 /* Utility */
 .center {
     display: flex;
@@ -123,6 +138,14 @@ body {
     gap: var(--space-sm);
     z-index: 50;
     animation: fadeIn 600ms ease-out 300ms both;
+    transition: opacity var(--transition-base), visibility var(--transition-base);
+}
+
+/* Hide control buttons when sidebar is open */
+body:has(.sidebar.show-sidebar) #top-controls {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
 }
 
 .control-btn {
@@ -162,19 +185,21 @@ body {
 /* ===== SIDEBAR BASE ===== */
 .sidebar {
     width: var(--sidebar-width);
-    height: 100dvh;
+    height: calc(100dvh - var(--space-lg) * 2);
     position: absolute;
-    top: 0;
-    right: 0;
+    top: var(--space-lg);
+    right: var(--space-lg);
     background: var(--bg-side);
     backdrop-filter: var(--blur);
     -webkit-backdrop-filter: var(--blur);
-    border-left: 1px solid var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
     z-index: 100;
     display: flex;
     flex-direction: column;
     transition: transform var(--transition-sidebar), opacity var(--transition-sidebar);
+    overflow: hidden;
 }
 
 .show-sidebar {
@@ -183,7 +208,7 @@ body {
 }
 
 .hide-sidebar {
-    transform: translateX(100%);
+    transform: translateX(calc(100% + var(--space-lg)));
     opacity: 0;
     pointer-events: none;
 }
@@ -444,6 +469,90 @@ body {
 .input-hint {
     font-size: 0.75rem;
     color: var(--clr-muted);
+}
+
+/* Slider Controls */
+.slider-group {
+    margin-top: var(--space-md);
+}
+
+.slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-sm);
+}
+
+.slider-header label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--clr);
+}
+
+.slider-value {
+    font-size: 0.8rem;
+    color: var(--clr-muted);
+    font-variant-numeric: tabular-nums;
+    min-width: 40px;
+    text-align: right;
+}
+
+.slider-group input[type="range"] {
+    width: 100%;
+    height: 6px;
+    appearance: none;
+    -webkit-appearance: none;
+    background: var(--input-bg);
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+}
+
+.slider-group input[type="range"]:hover {
+    background: var(--input-bg-hover);
+}
+
+.slider-group input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--accent);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.slider-group input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+}
+
+.slider-group input[type="range"]::-webkit-slider-thumb:active {
+    transform: scale(0.95);
+}
+
+.slider-group input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: var(--accent);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.slider-group input[type="range"]::-moz-range-thumb:hover {
+    transform: scale(1.1);
+}
+
+.slider-group input[type="range"]::-moz-range-track {
+    height: 6px;
+    background: var(--input-bg);
+    border-radius: 3px;
 }
 
 /* Settings Footer */

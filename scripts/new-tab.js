@@ -316,7 +316,7 @@ function updateBackground(data, preference) {
 
     img.onload = function () {
         console.log('Background image loaded successfully');
-        document.body.style.background = `url('${data?.fullUrl}')`
+        document.body.style.background = `url('${data?.fullUrl}') center/cover no-repeat`
         updateTheme()
     };
     img.onerror = function () {
@@ -442,7 +442,7 @@ document.getElementById('userImage').onchange = (e) => {
         const file = e.target.files[0];
         console.log(file);
         const src = URL.createObjectURL(file)
-        document.body.style.background = `url('${src}')`
+        document.body.style.background = `url('${src}') center/cover no-repeat`
 
         const reader = new FileReader()
         reader.readAsArrayBuffer(file);
@@ -515,6 +515,58 @@ async function getPreferenceWallpaper() {
 }
 
 // ///////////////////////////////////////////////////////////////////
+// Background Effects Management,
+// ///////////////////////////////////////////////////////////////////
+
+// Initialize background effects on page load
+(async function initBackgroundEffects() {
+    const blurValue = await getStorage('bg-blur') || 0
+    const darknessValue = await getStorage('bg-darkness') || 0
+
+    applyBackgroundEffects(blurValue, darknessValue)
+
+    // Update slider positions
+    document.getElementById('bg-blur-slider').value = blurValue
+    document.getElementById('bg-blur-value').textContent = `${blurValue}px`
+    document.getElementById('bg-darkness-slider').value = darknessValue
+    document.getElementById('bg-darkness-value').textContent = `${darknessValue}%`
+})()
+
+// Apply blur and darkness effects to background
+function applyBackgroundEffects(blur, darkness) {
+    const overlay = document.getElementById('bg-overlay')
+    overlay.style.backdropFilter = `blur(${blur}px)`
+    overlay.style.webkitBackdropFilter = `blur(${blur}px)`
+    overlay.style.background = `rgba(0, 0, 0, ${darkness / 100})`
+}
+
+// Blur slider event
+document.getElementById('bg-blur-slider').oninput = async (e) => {
+    const value = parseInt(e.target.value)
+    document.getElementById('bg-blur-value').textContent = `${value}px`
+    const darkness = parseInt(document.getElementById('bg-darkness-slider').value)
+    applyBackgroundEffects(value, darkness)
+}
+
+document.getElementById('bg-blur-slider').onchange = async (e) => {
+    const value = parseInt(e.target.value)
+    await setStorage('bg-blur', value)
+}
+
+// Darkness slider event
+document.getElementById('bg-darkness-slider').oninput = async (e) => {
+    const value = parseInt(e.target.value)
+    document.getElementById('bg-darkness-value').textContent = `${value}%`
+    const blur = parseInt(document.getElementById('bg-blur-slider').value)
+    applyBackgroundEffects(blur, value)
+}
+
+document.getElementById('bg-darkness-slider').onchange = async (e) => {
+    const value = parseInt(e.target.value)
+    await setStorage('bg-darkness', value)
+}
+
+// ///////////////////////////////////////////////////////////////////
 // Sidebar Management,
 // ///////////////////////////////////////////////////////////////////
 
@@ -562,6 +614,26 @@ document.getElementById('tasks-toggle-btn').onclick = async () => {
 document.getElementById('tasks-close-btn').onclick = () => {
     closeAllSidebars()
 }
+
+// Close sidebar when clicking outside
+document.addEventListener('click', (e) => {
+    const settingsSidebar = document.getElementById('settings-sidebar')
+    const tasksSidebar = document.getElementById('tasks-sidebar')
+    const settingsBtn = document.getElementById('settings-toggle-btn')
+    const tasksBtn = document.getElementById('tasks-toggle-btn')
+
+    const isAnySidebarOpen = settingsSidebar.classList.contains('show-sidebar') ||
+        tasksSidebar.classList.contains('show-sidebar')
+
+    if (!isAnySidebarOpen) return
+
+    const clickedInsideSidebar = settingsSidebar.contains(e.target) || tasksSidebar.contains(e.target)
+    const clickedToggleBtn = settingsBtn.contains(e.target) || tasksBtn.contains(e.target)
+
+    if (!clickedInsideSidebar && !clickedToggleBtn) {
+        closeAllSidebars()
+    }
+})
 
 // ///////////////////////////////////////////////////////////////////
 // Task Management,

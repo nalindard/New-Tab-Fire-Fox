@@ -3,12 +3,14 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="homepage.css" />
-        <script defer src="./js/homepage.js"></script>
+        <link rel="stylesheet" href="../styles/new-tab.css" />
+        <script defer src="../scripts/new-tab.js"></script>
         <title>New Tab</title>
     </head>
 
     <body class="center">
+        <!-- Background Overlay for Effects -->
+        <div id="bg-overlay"></div>
         <!-- Greeting -->
         <div id="greetings">
             <h4 id="greetings-msg"></h4>
@@ -190,6 +192,39 @@
                             <button id="pre-img">Previous</button>
                             <button id="nxt-img">Next</button>
                         </div>
+                    </div>
+
+                    <!-- Background Effects -->
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <label for="bg-blur-slider">Blur</label>
+                            <span id="bg-blur-value" class="slider-value"
+                                >0px</span
+                            >
+                        </div>
+                        <input
+                            type="range"
+                            id="bg-blur-slider"
+                            min="0"
+                            max="20"
+                            value="0"
+                            step="1" />
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-header">
+                            <label for="bg-darkness-slider">Darkness</label>
+                            <span id="bg-darkness-value" class="slider-value"
+                                >0%</span
+                            >
+                        </div>
+                        <input
+                            type="range"
+                            id="bg-darkness-slider"
+                            min="0"
+                            max="80"
+                            value="0"
+                            step="5" />
                     </div>
                 </div>
 
