@@ -7,14 +7,187 @@
     </head>
 
     <body>
-        <div id="view">
-            <h2>Say hi !</h2>
-            <h2 id="time">00:00:00</h2>
-            <h1>Average Color Finder</h1>
-            <button id="capture-button">Find Average Color</button>
-            <div id="color-display"></div>
-            <div id="results-from-back-end"></div>
-            <script src="../scripts/popup.js"></script>
+        <div id="popup-container">
+            <!-- Tab Navigation -->
+            <nav id="tabs">
+                <button class="tab active" data-tab="tasks">
+                    <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M9 11l3 3L22 4" />
+                        <path
+                            d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                    </svg>
+                    Tasks
+                </button>
+                <button class="tab" data-tab="wallpaper">
+                    <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <circle cx="8.5" cy="8.5" r="1.5" />
+                        <path d="M21 15l-5-5L5 21" />
+                    </svg>
+                    Wallpaper
+                </button>
+            </nav>
+
+            <!-- Tasks Panel -->
+            <div id="tasks-panel" class="panel active">
+                <div class="task-input-wrapper">
+                    <input
+                        type="text"
+                        id="task-input"
+                        placeholder="Add a quick task..."
+                        maxlength="50" />
+                    <button id="add-task-btn" title="Add Task">
+                        <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2.5"
+                            stroke-linecap="round">
+                            <line x1="12" y1="5" x2="12" y2="19" />
+                            <line x1="5" y1="12" x2="19" y2="12" />
+                        </svg>
+                    </button>
+                </div>
+                <div id="task-list"></div>
+                <div id="empty-tasks" class="empty-state">
+                    <svg
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M9 11l3 3L22 4" />
+                        <path
+                            d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
+                    </svg>
+                    <p>No tasks yet</p>
+                    <span>Add one above!</span>
+                </div>
+            </div>
+
+            <!-- Wallpaper Panel -->
+            <div id="wallpaper-panel" class="panel">
+                <div class="wallpaper-section">
+                    <label class="section-label">Wallpaper Source</label>
+                    <div id="wallpaper-modes">
+                        <button
+                            class="mode-btn active"
+                            data-mode="bing-wallpaper">
+                            <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <path
+                                    d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+                            </svg>
+                            Bing Daily
+                        </button>
+                        <button class="mode-btn" data-mode="user-wallpaper">
+                            <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2">
+                                <rect
+                                    x="3"
+                                    y="3"
+                                    width="18"
+                                    height="18"
+                                    rx="2" />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <path d="M21 15l-5-5L5 21" />
+                            </svg>
+                            Custom
+                        </button>
+                    </div>
+                </div>
+
+                <div id="bing-controls" class="wallpaper-section">
+                    <label class="section-label">Bing Wallpaper</label>
+                    <p id="bing-title" class="wallpaper-info">Loading...</p>
+                    <div class="nav-buttons">
+                        <button id="prev-wallpaper" class="nav-btn">
+                            <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6" />
+                            </svg>
+                            Previous
+                        </button>
+                        <button id="next-wallpaper" class="nav-btn">
+                            Next
+                            <svg
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="custom-controls" class="wallpaper-section hidden">
+                    <label class="section-label">Custom Wallpaper</label>
+                    <p class="wallpaper-info muted">
+                        Manage custom wallpapers in the New Tab settings.
+                    </p>
+                    <button id="open-newtab" class="secondary-btn">
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2">
+                            <path
+                                d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                            <polyline points="15 3 21 3 21 9" />
+                            <line x1="10" y1="14" x2="21" y2="3" />
+                        </svg>
+                        Open New Tab
+                    </button>
+                </div>
+            </div>
         </div>
+
+        <script src="../scripts/popup.js"></script>
     </body>
 </html>

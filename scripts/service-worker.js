@@ -238,7 +238,7 @@ async function updateTheme(color_scheme_ = "") {
                 console.log('%cavgColor', `background-color:${avgColor};`, avgColor, avgHSL, hslShade);
 
                 let shade = color_scheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.5)'
-                let text_color = color_scheme === 'dark' ? 'white' : 'black'
+                let text_color = 'white' // Always use white text for visibility on all backgrounds
 
                 // @ts-ignore
                 browser.theme.update({

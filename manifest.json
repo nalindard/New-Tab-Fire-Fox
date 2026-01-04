@@ -1,14 +1,20 @@
 {
     "manifest_version": 3,
-    "name": "Home Page",
-    "short_name": "Home Page",
+    "name": "New Tab",
+    "short_name": "New Tab",
     "author": "Nalinda Dissanayake",
     "developer": {
         "name": "Nalinda Dissanayake",
-        "url": "https://nalindard.github.io/"
+        "url": "https://nalinda.dev"
     },
-    "description": "Make It Yours. Enjoy the Life. Freedom with Firefox !",
-    "version": "0.0.1",
+    "description": "Make it yours. Enjoy life. Freedom with Firefox! Dynamic themes, task list, sweet greetings — set your wallpaper or use Bing. No ads, no tracking, full freedom. Have an awesome time!",
+    "version": "1.2.0",
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "homepage.pp@nalindard.github.io",
+            "strict_min_version": "109.0"
+        }
+    },
     "icons": {
         "16": "icons/icon-16.png",
         "32": "icons/icon-32.png",
@@ -43,7 +49,7 @@
         "newtab": "pages/new-tab.html"
     },
     "action": {
-        "default_title": "Home Page",
+        "default_title": "New Tab",
         "default_popup": "pages/popup.html",
         "default_icon": "icons/icon-256.png"
     },

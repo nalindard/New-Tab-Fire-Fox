@@ -753,3 +753,27 @@ async function setStorage(key = "", value) {
         await browser.storage.local.set({ [key]: value })
     }
 }
+
+// ///////////////////////////////////////////////////////////////////
+// Welcome Modal (One-time after update)
+// ///////////////////////////////////////////////////////////////////
+
+const CURRENT_VERSION = '1.2.0' // Should match manifest version
+
+    ; (async function showWelcomeModal() {
+        const lastSeenVersion = await getStorage('welcome_modal_version')
+
+        // Show modal only if version is new or not seen before
+        if (lastSeenVersion !== CURRENT_VERSION) {
+            const modal = document.getElementById('welcome-modal')
+            if (modal) {
+                modal.style.display = 'flex'
+            }
+        }
+    })()
+
+document.getElementById('welcome-close-btn').onclick = async () => {
+    const modal = document.getElementById('welcome-modal')
+    modal.style.display = 'none'
+    await setStorage('welcome_modal_version', CURRENT_VERSION)
+}

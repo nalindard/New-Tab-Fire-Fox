@@ -103,7 +103,7 @@ The codebase uses vanilla JavaScript with no build step required. To develop:
 
 Developed by Nalinda Dissanayake
 
-Website: [nalindard.github.io](https://nalindard.github.io/)
+Website: [nalinda.dev/#contacts](https://nalinda.dev/#contacts/)
 
 ---
 
@@ -129,4 +129,4 @@ Website favicons for the top sites grid are provided by [Favicone](https://favic
 
 ---
 
-If you have questions, concerns, or just want to share feedback, I would love to hear from you. Reach out through the [contact page](https://nalindard.github.io/contacts).
+If you have questions, concerns, or just want to share feedback, I would love to hear from you. Reach out through the [contact page](https://nalinda.dev/#contacts/contacts).
