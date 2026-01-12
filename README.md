@@ -81,18 +81,31 @@ Or for manual/development installation:
 ## Project Structure
 
 ```
-HomePage.PP/
+New-Tab-Fire-Fox/
 ├── manifest.json          # Extension configuration and permissions
-├── homepage.html          # New tab page structure
-├── homepage.css           # Styling with dark/light mode support
-├── popup.html             # Browser action popup
-├── popup.css              # Popup styling
 ├── icons/                 # Extension icons in various sizes
-└── js/
-    ├── homepage.js        # Main homepage logic
-    ├── service_worker.js  # Background script for theme management
-    ├── contentScript.js   # Injected script for color scheme detection
-    └── popup.js           # Popup functionality
+│   ├── icon-16.png
+│   ├── icon-32.png
+│   ├── icon-48.png
+│   ├── icon-128.png
+│   ├── icon-256.png
+│   └── icon.png
+├── images/                # Screenshots and promotional images
+│   ├── nalinda-new-tab-3d-stack.jpg
+│   ├── nalinda-new-tab-dark.png
+│   ├── nalinda-new-tab-light.png
+│   └── nalinda-new-tab-synthwave.png
+├── pages/                 # HTML pages
+│   ├── new-tab.html       # New tab page structure
+│   └── popup.html         # Browser action popup
+├── scripts/               # JavaScript files
+│   ├── new-tab.js         # Main new tab page logic
+│   ├── service-worker.js  # Background script for theme management
+│   ├── content-script.js  # Injected script for color scheme detection
+│   └── popup.js           # Popup functionality
+└── styles/                # CSS stylesheets
+    ├── new-tab.css        # New tab page styling with dark/light mode support
+    └── popup.css          # Popup styling
 ```
 
 ## Technical Notes
